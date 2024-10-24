@@ -1,0 +1,69 @@
+/* Dashboard Container */
+.dashboard {
+  display: flex;
+  flex-direction: row; /* Sidebar on the left, content on the right */
+  height: 100vh; /* Full viewport height */
+  width: 100vw; /* Full viewport width */
+  overflow: hidden; /* Prevent content overflow */
+  background-color: #DCF2F1; /* Light background for contrast */
+}
+
+/* Sidebar remains fixed, the main content will adjust dynamically */
+.sidebar {
+  width: 240px; /* Fixed width for the sidebar */
+  height: 100vh; /* Full height for the sidebar */
+  background-color: #fff; /* Background for sidebar */
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for sidebar */
+  position: relative;
+}
+
+/* Main Container for the dynamic content */
+.main-container {
+  flex-grow: 1; /* Take the remaining width after sidebar */
+  display: flex;
+  flex-direction: column; /* Arrange content vertically */
+  overflow-y: auto; /* Enable vertical scrolling if content overflows */
+  padding: 0; /* Remove padding to maximize content space */
+}
+
+/* Main Content Area */
+.content {
+  flex-grow: 1; /* Content should take up the remaining space */
+  padding: 20px; /* Add padding inside the content area */
+  overflow-y: auto; /* Enable scrolling for the content area */
+}
+
+/* Ensure scrolling is smooth */
+.main-container::-webkit-scrollbar {
+  width: 10px;
+}
+
+.main-container::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 10px;
+}
+
+.main-container::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+}
+
+/* Media Queries for Smaller Screens */
+@media (max-width: 768px) {
+  .dashboard {
+    flex-direction: column; /* Stack sidebar and main content vertically on small screens */
+  }
+
+  .sidebar {
+    width: 100%; /* Sidebar takes full width on small screens */
+    height: auto; /* Sidebar adjusts its height dynamically */
+    position: static; /* Sidebar moves to a static position */
+  }
+
+  .main-container {
+    padding: 10px; /* Add padding for smaller screens */
+  }
+
+  .header {
+    padding: 15px; /* Slightly reduce header padding on small screens */
+  }
+}

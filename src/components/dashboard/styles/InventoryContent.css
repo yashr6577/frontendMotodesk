@@ -1,0 +1,110 @@
+/* Main Layout */
+.inventory-layout {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  height: 100vh;
+  background-color: #eef2f6;
+  box-sizing: border-box;
+}
+
+/* Left Section: MUI Tabs and Form */
+.left-section {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: calc(100% - 400px);
+  max-width: 60%;
+  min-width: 500px;
+}
+
+/* Form Container */
+.form-container {
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+  max-height: 80vh;
+  width: auto;
+}
+
+/* Inventory Summary Cards */
+.right-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.summary-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.summary-card:hover {
+  transform: scale(1.05);
+}
+
+.summary-icon {
+  font-size: 40px;
+}
+
+.available .summary-icon {
+  color: #4caf50;
+}
+
+.ordered .summary-icon {
+  color: #ff9800;
+}
+
+.summary-card h4 {
+  margin: 0;
+  font-weight: bold;
+}
+
+.summary-card p {
+  margin: 0;
+  font-size: 24px;
+  color: #1a237e;
+}
+
+/* Form Content */
+.form-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  max-width: 600px;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.action-button {
+  background-color: #1976d2;
+  color: white;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  width: 100%;
+  max-width: 300px;
+  align-self: center;
+  transition: background-color 0.3s;
+}
+
+.action-button:hover {
+  background-color: #1565c0;
+}

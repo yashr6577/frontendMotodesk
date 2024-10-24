@@ -1,0 +1,98 @@
+.header {
+  padding: 20px;
+  background-color: #e8f5f5; /* Light cyan background color */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky; /* Fix the header at the top */
+  top: 0;
+  left: auto;
+  /* width: calc(100% - 330px); Full width */
+  width: auto;
+  border-bottom: 1px solid #e0e0e0;
+  z-index: 1000;
+  height: 75px;
+}
+
+.header-left {
+  text-align: left;
+}
+
+.header-left h1 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #3c3c3c;
+  margin-bottom: 5px;
+}
+
+.header-left p {
+  font-size: 14px;
+  color: #666666;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  position: relative; /* Added for dropdown positioning */
+}
+
+.header-right h3 {
+  margin-right: 10px;
+  font-size: 18px;
+  font-weight: 500;
+  color: #333333;
+}
+
+.dropdown-menu {
+  position: absolute; /* Position relative to header-right */
+  top: 60px; /* Position below the header */
+  right: 0; /* Align to the right */
+  background-color: white;
+  border: 1px solid #ddd; /* Slightly lighter border for elegance */
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15); /* Enhanced shadow for depth */
+  padding: 10px 20px; /* Increased padding for better touch targets */
+  border-radius: 8px; /* Rounded corners */
+  z-index: 1000; /* Ensure it appears above other elements */
+  transition: opacity 0.3s ease, transform 0.3s ease; /* Smooth animation */
+  opacity: 1; /* Ensure the menu is visible */
+  transform: translateY(10px); /* Slightly lifted effect */
+}
+
+.dropdown-menu p {
+  margin: 5px 0;
+  padding: 10px; /* Increased padding for clickable areas */
+  display: flex; /* Align text and icon */
+  align-items: center; /* Center icon and text vertically */
+  cursor: pointer; /* Show pointer on hover */
+  border-radius: 4px; /* Rounded corners for each item */
+  transition: background-color 0.2s; /* Smooth background transition */
+}
+
+.dropdown-menu p:hover {
+  background-color: #e0f7fa; /* Light blue highlight on hover */
+}
+
+.dropdown-menu p svg {
+  margin-right: 8px; /* Space between icon and text */
+}
+
+.main-content {
+  padding-top: 80px; /* Space for the header */
+  padding: 20px;
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 15px;
+  }
+
+  .main-content {
+    padding-top: 120px; /* Increase space for mobile header */
+  }
+
+  .dropdown-menu {
+    width: 100%; /* Full width on mobile */
+  }
+}

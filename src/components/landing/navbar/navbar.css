@@ -1,0 +1,61 @@
+/* Navbar.css */
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px;
+    padding: 10px 20px;
+    background:transparent;
+    position: relative; /* For absolute centering */
+  }
+  
+  .logo {
+    display: flex;
+    align-items: center;
+  }
+  
+  .logo-icon {
+    height: 40px;
+    width: 40px;
+  }
+  
+  .logo-text {
+    font-weight: bold;
+    font-size: 20px;
+    margin-left: 10px;
+    color: #000;
+  }
+  
+  /* To center the navbar items */
+  .navbar {
+    margin-top: 8px;
+    position: absolute; /* So it doesn't interfere with flexbox */
+    left: 50%; /* Move it to the center */
+    transform: translateX(-50%); /* Shift it back by 50% to truly center it */
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 20px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .nav-item {
+    color: #7a7a7a;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 8px 16px;
+    transition: color 0.3s ease;
+  }
+  
+  .nav-item.active {
+    color: #000;
+    font-weight: bold;
+  }
+  
+  .nav-item:hover {
+    color: #000;
+  }
+  

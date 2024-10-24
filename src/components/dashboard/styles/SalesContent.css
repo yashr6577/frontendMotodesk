@@ -1,0 +1,188 @@
+/* Main Content Styling */
+.sales-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  background-color: #eef2f6;
+  min-height: 100vh;
+}
+
+/* Responsive Grid for Summary */
+.sales-summary-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+/* Summary Boxes */
+.sales-summary {
+  display: flex;
+  gap: 15px;
+}
+
+.summary-box {
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  flex: 1;
+  transition: transform 0.3s ease;
+}
+
+.summary-box:hover {
+  transform: scale(1.05);
+}
+
+.summary-icon {
+  margin-bottom: 10px;
+  font-size: 30px;
+}
+
+/* Different Icon Colors */
+.summary-icon-sales { color: #ff7043; }
+.summary-icon-orders { color: #42a5f5; }
+.summary-icon-delivery { color: #66bb6a; }
+.summary-icon-customer { color: #ab47bc; }
+
+.summary-title {
+  font-weight: bold;
+  color: #616161;
+}
+
+.summary-value {
+  font-size: 28px;
+  margin: 8px 0;
+  color: #1a237e;
+}
+
+.summary-percentage {
+  color: #43a047;
+  font-size: 14px;
+}
+
+/* Earnings Section */
+.earnings-box {
+  background-color: #1c313a;
+  color: white;
+  padding: 25px;
+  border-radius: 8px;
+  text-align: center;
+}
+.earnings-box h1{
+  color: rgb(81, 158, 252);
+  
+}
+
+.progress-container {
+  background-color: #b0bec5;
+  border-radius: 4px;
+  height: 10px;
+  margin-top: 15px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  background-color: #40ff66;
+  height: 100%;
+  width: 80%;
+}
+
+/* Top Products & Chart */
+.products-charts-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.top-products, .pie-chart-box {
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  flex: 1;
+}
+
+.product-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.popularity-bar {
+  background-color: #e0e0e0;
+  height: 8px;
+  width: 60%;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.popularity-fill {
+  height: 100%;
+  background-color: #42a5f5;
+}
+
+/* Pie Chart Section */
+.pie-chart-box {
+  position: relative;
+  display: grid;
+  grid-template-rows: repeat(2,0fr);
+  align-items: start;
+
+}
+
+.show-value-label {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  align-items: center;
+}
+
+/* Report Generation Form */
+.report-generation {
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.report-form {
+  display: grid; /* Use grid for layout */
+  grid-template-columns: repeat(2, 1fr); /* Two columns for labels and inputs */
+  gap: 20px; /* Space between elements */
+}
+
+.form-group {
+  display: flex; /* Use flex for vertical stacking */
+  flex-direction: column; /* Stack label and input */
+}
+
+.form-group label {
+  margin-bottom: 5px; /* Space between label and input */
+  font-weight: bold; /* Bold label text */
+  color: #333; /* Darker color for better visibility */
+}
+
+.form-group input,
+.form-group select {
+  width: auto;
+  padding: 10px; /* Padding for input/select elements */
+  border: 1px solid #ccc; /* Light border */
+  border-radius: 4px; /* Rounded corners */
+  font-size: 14px; /* Font size for input/select */
+}
+
+.generate-button {
+  background-color: #1976d2;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  grid-column: span 2; /* Make button full width across two columns */
+}
+
+.generate-button:hover {
+  background-color: #1565c0;
+}

@@ -1,0 +1,101 @@
+/* Main Layout */
+.customer-layout {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    background-color: #e8f5e9;
+    min-height: 100vh;
+    flex-wrap: wrap;
+  }
+  
+  /* Tab Menu */
+  .tab-menu {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    width: 100%;
+  }
+  
+  .tab-button {
+    flex: 1;
+    padding: 10px;
+    background-color: #ddd;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+  }
+  
+  .tab-button.active {
+    background-color: #1976d2;
+    color: white;
+  }
+  
+  .tab-button:hover {
+    background-color: #bbdefb;
+  }
+  
+  /* Form Content */
+  .form-content, .review-form {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  /* Review Cards */
+  .reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+  }
+  
+  .review-card {
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .review-header {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .star-icon {
+    color: #ffeb3b;
+  }
+  
+  /* Customer Summary Section */
+  .customer-summary {
+    flex: 1;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .action-button {
+    background-color: #1976d2;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+    margin-top: 10px;
+  }
+  
+  .action-button:hover {
+    background-color: #1565c0;
+  }
+  
