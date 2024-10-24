@@ -58,10 +58,10 @@ const salesSummaryData = [
 ];
 
 const productData = [
-  { name: "Tesla Model Y", popularity: 100, sales: 46 },
-  { name: "Honda CR-V", popularity: 50, sales: 17 },
-  { name: "GMC Sierra", popularity: 60, sales: 19 },
-  { name: "Toyota Camry", popularity: 80, sales: 29 },
+  { name: "Altroz", popularity: 100, sales: 46 },
+  { name: "Safari", popularity: 50, sales: 17 },
+  { name: "Tiago", popularity: 60, sales: 19 },
+  { name: "Harrier", popularity: 80, sales: 29 },
 ];
 
 function SalesContent() {
