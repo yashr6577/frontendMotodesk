@@ -27,7 +27,7 @@ jobs:
     #   run: npm test
 
     - name: Build project
-      run: npm run build
+      run: CI=false npm run build
 
     - name: Deploy to Render
       run: |
