@@ -6,12 +6,6 @@ import {
 import { FaUserPlus, FaStar, FaChartPie } from "react-icons/fa";
 import Chart from "react-google-charts";
 
-const customerSummary = {
-  totalCustomers: 125,
-  satisfiedCustomers: 95,
-  unsatisfiedCustomers: 30,
-};
-
 const CustomerContent = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [reviews, setReviews] = useState([]);  // State to store fetched reviews
