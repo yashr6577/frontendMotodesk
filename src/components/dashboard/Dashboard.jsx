@@ -15,10 +15,13 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [selectedMenu, setSelectedOption] = useState('dashboard'); // Manage selected menu state
   const [userName, setUserName] = useState('');
+  const [userlogin, setUserLogin] = useState('');
 
   useEffect(() => {
-    if (location.state?.userName) {
+    // Set userName and userlogin from navigation state or redirect if missing
+    if (location.state?.userName && location.state?.userlogin) {
       setUserName(location.state.userName);
+      setUserLogin(location.state.userlogin);
     } else {
       navigate('/login'); // Redirect to login if no user data
     }
@@ -27,16 +30,16 @@ const Dashboard = () => {
   const renderContent = () => {
     switch (selectedMenu) {
       case 'sales':
-        return <SalesContent />;
+        return <SalesContent userlogin={userlogin} />;
       case 'inventory':
-        return <InventoryContent />;
+        return <InventoryContent userlogin={userlogin} />; // Pass userlogin to InventoryContent
       case 'customer':
         return <CustomerContent />;
       case 'catalog':
         return <CatalogContent />;
       case 'dashboard':
       default:
-        return <DashboardContent />;
+        return <DashboardContent />; // Optionally pass userlogin if needed
     }
   };
 

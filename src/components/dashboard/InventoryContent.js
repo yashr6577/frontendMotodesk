@@ -18,32 +18,39 @@ import {
   Paper,
   TableContainer,
 } from "@mui/material";
-import { FaShoppingCart, FaTruckLoading } from "react-icons/fa";
+import { FaShoppingCart, FaTruckLoading, FaWarehouse } from "react-icons/fa";
 
 const inventoryData = {
   totalAvailableCars: 120,
   totalOrderedCars: 30,
 };
 
-function InventoryContent() {
-  const [activeTab, setActiveTab] = useState(0); // 0 = Order Car, 1 = Order Tracking
+function InventoryContent({ userlogin }) {
+  const [activeTab, setActiveTab] = useState(0); // 0 = Order Car, 1 = Order Tracking, 2 = Inventory Updates
   const [formData, setFormData] = useState({
     name: "",
     model: "",
     color: "",
     quantity: 0,
   });
+  const [inventoryFormData, setInventoryFormData] = useState({
+    name: "",
+    model: "",
+    color: "",
+    quantity: 0,
+    costPrice: 0,
+  });
   const [responseMessage, setResponseMessage] = useState("");
-  const [ordersData, setOrdersData] = useState([]); // State for orders data
-
-  const [inventoryData, setInventoryData] = useState([]); // State for inventory data
-
+  const [ordersData, setOrdersData] = useState([]);
+  const [inventoryData, setInventoryData] = useState([]);
 
   useEffect(() => {
     // Fetch orders from backend when component mounts
     const fetchOrders = async () => {
       try {
-        const response = await fetch("https://motodesk2-o.onrender.com/order/getOrder");
+        const response = await fetch(
+          "https://motodesk2-o.onrender.com/order/getOrder"
+        );
         const data = await response.json();
         setOrdersData(data.orders); // Set orders data
       } catch (error) {
@@ -52,7 +59,9 @@ function InventoryContent() {
     };
     const fetchInventory = async () => {
       try {
-        const response = await fetch("https://motodesk2-o.onrender.com/inventory/"); // Adjust the endpoint as needed
+        const response = await fetch(
+          `https://motodesk2-o.onrender.com/inventory/user/${userlogin}`
+        ); // Adjust the endpoint as needed
         const data = await response.json();
         setInventoryData(data); // Set inventory data
       } catch (error) {
@@ -89,13 +98,16 @@ function InventoryContent() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("https://motodesk2-o.onrender.com/order/add", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        `https://motodesk2-o.onrender.com/order/addnew/${userlogin}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
       if (response.ok) {
         const result = await response.text();
@@ -109,6 +121,78 @@ function InventoryContent() {
       setResponseMessage("Server Error");
     }
   };
+
+  const handleAddInventory = async () => {
+    try {
+      const response = await fetch(
+        `https://motodesk2-o.onrender.com/inventory/add/${userlogin}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(inventoryFormData),
+        }
+      );
+      const result = await response.json();
+      setResponseMessage(result.message || "Inventory item added");
+    } catch (error) {
+      console.error("Error adding inventory:", error);
+      setResponseMessage("Error adding item");
+    }
+  };
+
+  // Fetch `id` based on name, model, and color selection
+const handleInventoryInputChange = (e) => {
+  const { name, value } = e.target;
+  setInventoryFormData((prevData) => {
+    const updatedData = { ...prevData, [name]: value };
+
+    // Get the id based on the selected name, model, and color
+    const selectedItem = inventoryData.find(
+      (item) =>
+        item.name === updatedData.name &&
+        item.model === updatedData.model &&
+        item.color === updatedData.color
+    );
+    if (selectedItem) {
+      updatedData.id = selectedItem._id; // Set id if match found
+    } else {
+      updatedData.id = null; // Reset id if no match
+    }
+
+    return updatedData;
+  });
+};
+
+const handleUpdateInventory = async (id) => {
+  try {
+    const response = await fetch(`https://motodesk2-o.onrender.com/inventory/update/${id}/${userlogin}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(inventoryFormData),
+    });
+    const result = await response.json();
+    setResponseMessage(result.message || "Inventory updated successfully.");
+  } catch (error) {
+    console.error("Error updating inventory:", error);
+    setResponseMessage("Failed to update inventory.");
+  }
+};
+
+const handleDeleteInventory = async (id) => {
+  try {
+    const response = await fetch(`https://motodesk2-o.onrender.com/inventory/delete/${id}/${userlogin}`, {
+      method: "DELETE",
+    });
+    const result = await response.json();
+    setResponseMessage(result.message || "Inventory deleted successfully.");
+  } catch (error) {
+    console.error("Error deleting inventory:", error);
+    setResponseMessage("Failed to delete inventory.");
+  }
+};
+
 
   const renderOrderForm = () => {
     return (
@@ -178,7 +262,6 @@ function InventoryContent() {
     );
   };
 
- 
   const renderOrderTrackingTable = () => (
     <TableContainer component={Paper} sx={{ maxHeight: 400 }}>
       <Table stickyHeader aria-label="order tracking table">
@@ -204,21 +287,211 @@ function InventoryContent() {
               <TableCell>{order.color}</TableCell>
               <TableCell>{order.quantity}</TableCell>
               <TableCell>
-                <Typography sx={{ color: getStatusColor(order.status), fontWeight: "bold" }}>
+                <Typography
+                  sx={{
+                    color: getStatusColor(order.status),
+                    fontWeight: "bold",
+                  }}
+                >
                   {order.status}
                 </Typography>
               </TableCell>
-              <TableCell>
-                ₹{(order.costPrice || 0) * order.quantity}
-              </TableCell>
+              <TableCell>₹{(order.costPrice || 0) * order.quantity}</TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
     </TableContainer>
   );
-  
 
+  const renderInventoryForm = () => {
+    // Get unique car names for the Name select dropdown
+    const carNames = [...new Set(inventoryData.map(item => item.name))];
+  
+    // Get filtered models and colors based on the selected name
+    const filteredModels = inventoryData
+      .filter(item => item.name === inventoryFormData.name)
+      .map(item => item.model);
+  
+    const filteredColors = inventoryData
+      .filter(item => item.name === inventoryFormData.name)
+      .map(item => item.color);
+  
+    return (
+      <Box component="form" sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+        <FormControl fullWidth>
+          <InputLabel>Name</InputLabel>
+          <Select
+            name="name"
+            value={inventoryFormData.name}
+            onChange={handleInventoryInputChange}
+            required
+          >
+            {carNames.map((name, index) => (
+              <MenuItem key={index} value={name}>
+                {name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+  
+        <FormControl fullWidth>
+          <InputLabel>Model</InputLabel>
+          <Select
+            name="model"
+            value={inventoryFormData.model}
+            onChange={handleInventoryInputChange}
+            required
+            disabled={!inventoryFormData.name} // Disable until a name is selected
+          >
+            {[...new Set(filteredModels)].map((model, index) => (
+              <MenuItem key={index} value={model}>
+                {model}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+  
+        <FormControl fullWidth>
+          <InputLabel>Color</InputLabel>
+          <Select
+            name="color"
+            value={inventoryFormData.color}
+            onChange={handleInventoryInputChange}
+            required
+            disabled={!inventoryFormData.name} // Disable until a name is selected
+          >
+            {[...new Set(filteredColors)].map((color, index) => (
+              <MenuItem key={index} value={color}>
+                {color}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+  
+        <TextField
+          label="Quantity"
+          name="quantity"
+          type="number"
+          value={inventoryFormData.quantity}
+          onChange={handleInventoryInputChange}
+          required
+          fullWidth
+        />
+  
+        <TextField
+          label="Cost Price"
+          name="costPrice"
+          value={inventoryFormData.costPrice}
+          onChange={handleInventoryInputChange}
+          required
+          fullWidth
+        />
+  
+        <Box sx={{ display: "flex", justifyContent: "center", gap: 2 }}>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={() => handleUpdateInventory(inventoryFormData.id)}
+          >
+            Update
+          </Button>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => handleDeleteInventory(inventoryFormData.id)}
+          >
+            Delete
+          </Button>
+        </Box>
+  
+        {responseMessage && (
+          <Typography
+            color="primary"
+            variant="h6"
+            sx={{ textAlign: "center", mt: 2 }}
+          >
+            {responseMessage}
+          </Typography>
+        )}
+      </Box>
+    );
+  };
+
+  const renderAddInventoryForm = () =>{
+    return (
+      <Box
+        component="form"
+        sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+      >
+        <TextField
+          label="Name"
+          name="name"
+          value={inventoryFormData.name}
+          onChange={handleInventoryInputChange}
+          required
+          fullWidth
+        />
+        <FormControl fullWidth>
+          <InputLabel>Model</InputLabel>
+          <Select
+            name="model"
+            value={inventoryFormData.model}
+            onChange={handleInventoryInputChange}
+            required
+          >
+            <MenuItem value="top">top</MenuItem>
+            <MenuItem value="mid">mid</MenuItem>
+            <MenuItem value="base">base</MenuItem>
+          </Select>
+        </FormControl>
+        <TextField
+          label="Color"
+          name="color"
+          value={inventoryFormData.color}
+          onChange={handleInventoryInputChange}
+          required
+          fullWidth
+        />
+        <TextField
+          label="Quantity"
+          name="quantity"
+          type="number"
+          value={inventoryFormData.quantity}
+          onChange={handleInventoryInputChange}
+          required
+          fullWidth
+        />
+        <TextField
+          label="Cost Price"
+          name="costPrice"
+          value={inventoryFormData.costPrice}
+          onChange={handleInventoryInputChange}
+          required
+          fullWidth
+        />
+        <Box sx={{ display: "flex", justifyContent: "center", gap: 2 }}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleAddInventory}
+          >
+            Add Car
+          </Button>
+        </Box>
+        {responseMessage && (
+          <Typography
+            color="primary"
+            variant="h6"
+            sx={{ textAlign: "center", mt: 2 }}
+          >
+            {responseMessage}
+          </Typography>
+        )}
+      </Box>
+    );
+  }
+  
   return (
     <Box
       sx={{
@@ -229,7 +502,9 @@ function InventoryContent() {
         backgroundColor: "#eef2f6",
       }}
     >
-      <Box sx={{ flex: 2, maxWidth: "100%", minWidth: "700px", width:"700px"}}>
+      <Box
+        sx={{ flex: 2, maxWidth: "100%", minWidth: "700px", width: "700px" }}
+      >
         <Tabs
           value={activeTab}
           onChange={handleTabChange}
@@ -244,6 +519,8 @@ function InventoryContent() {
         >
           <Tab icon={<FaShoppingCart />} label="Order Car" />
           <Tab icon={<FaTruckLoading />} label="Order Tracking" />
+          <Tab icon={<FaWarehouse />} label="Inventory" />
+          <Tab icon={<FaWarehouse />} label="Inventory Updates" />
         </Tabs>
         <Box
           sx={{
@@ -256,7 +533,13 @@ function InventoryContent() {
             maxHeight: "80vh",
           }}
         >
-          {activeTab === 0 ? renderOrderForm() : renderOrderTrackingTable()}
+          {activeTab === 0
+            ? renderOrderForm()
+            : activeTab === 1
+            ? renderOrderTrackingTable()
+            : activeTab === 2
+            ? renderAddInventoryForm()
+            : renderInventoryForm()}
         </Box>
       </Box>
 
@@ -276,7 +559,7 @@ function InventoryContent() {
           <Box>
             <Typography variant="h6">Total Available Cars</Typography>
             <Typography variant="h4" color="primary">
-            {inventoryData.reduce((total, inv) => total + inv.quantity, 0)}
+              {inventoryData.reduce((total, inv) => total + inv.quantity, 0)}
             </Typography>
           </Box>
         </Box>
@@ -295,7 +578,7 @@ function InventoryContent() {
           <Box>
             <Typography variant="h6">Total Ordered Cars</Typography>
             <Typography variant="h4" color="primary">
-            {ordersData.reduce((total, order) => total + order.quantity, 0)}
+              {ordersData.reduce((total, order) => total + order.quantity, 0)}
             </Typography>
           </Box>
         </Box>

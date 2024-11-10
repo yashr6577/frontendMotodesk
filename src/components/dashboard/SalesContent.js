@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FaShoppingCart,
   FaUserPlus,
@@ -64,7 +64,7 @@ const productData = [
   { name: "Harrier", popularity: 80, sales: 29 },
 ];
 
-function SalesContent() {
+function SalesContent({ userlogin }) {
   const [tabValue, setTabValue] = useState(0);
   const [formData, setFormData] = useState({
     name: "",
@@ -73,7 +73,25 @@ function SalesContent() {
     quantity: "",
     sellPrice: "",
   });
+  const [inventoryData, setInventoryData] = useState([]);
   const [responseMessage, setResponseMessage] = useState("");
+
+  useEffect(() => {
+    // Fetch inventory data on component mount
+    const fetchInventoryData = async () => {
+      try {
+        const response = await fetch(
+          `https://motodesk2-o.onrender.com/inventory/user/${userlogin}`
+        );
+        const data = await response.json();
+        setInventoryData(data);
+      } catch (error) {
+        console.error("Error fetching inventory data:", error);
+      }
+    };
+
+    fetchInventoryData();
+  }, [userlogin]);
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
@@ -89,64 +107,68 @@ function SalesContent() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Define the endpoint based on the current tab
     const endpoint =
-        tabValue === 0
-            ? "https://motodesk2-o.onrender.com/sales/add" // Endpoint for making a sale
-            : "https://motodesk2-o.onrender.com/sales/report"; // Endpoint for generating a report
+      tabValue === 0
+        ? `https://motodesk2-o.onrender.com/sales/add/${userlogin}` // Endpoint for making a sale
+        : "https://motodesk2-o.onrender.com/sales/report"; // Endpoint for generating a report
 
     try {
-        let response;
-        if (tabValue === 0) {
-            // Making a sale: POST request
-            response = await fetch(endpoint, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(formData),
-            });
+      let response;
+      if (tabValue === 0) {
+        // Making a sale: POST request
+        response = await fetch(endpoint, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        });
 
-            // Handling response for sale creation
-            if (response.ok) {
-                const result = await response.text();
-                setResponseMessage(result);
-            } else {
-                const errorData = await response.json();
-                setResponseMessage(errorData.message || "An error occurred");
-            }
+        // Handling response for sale creation
+        if (response.ok) {
+          const result = await response.text();
+          setResponseMessage(result);
         } else {
-            // Generating a report: GET request
-            response = await fetch(`${endpoint}?name=${formData.name}&model=${formData.model}`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/pdf", // Expecting a PDF response
-                },
-            });
-
-            // Handling response for report generation
-            if (response.ok) {
-                const blob = await response.blob();
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'sales_report.pdf'; // Default name for the downloaded PDF
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
-                setResponseMessage("Report generated successfully.");
-            } else {
-                const errorData = await response.json();
-                setResponseMessage(errorData.message || "An error occurred while generating the report.");
-            }
+          const errorData = await response.json();
+          setResponseMessage(errorData.message || "An error occurred");
         }
-    } catch (error) {
-        console.error(error);
-        setResponseMessage("Server Error");
-    }
-};
+      } else {
+        // Generating a report: GET request
+        response = await fetch(
+          `${endpoint}?name=${formData.name}&model=${formData.model}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/pdf", // Expecting a PDF response
+            },
+          }
+        );
 
+        // Handling response for report generation
+        if (response.ok) {
+          const blob = await response.blob();
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "sales_report.pdf"; // Default name for the downloaded PDF
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          setResponseMessage("Report generated successfully.");
+        } else {
+          const errorData = await response.json();
+          setResponseMessage(
+            errorData.message || "An error occurred while generating the report."
+          );
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      setResponseMessage("Server Error");
+    }
+  };
 
   return (
     <Box sx={{ p: 3 }}>
@@ -292,15 +314,38 @@ function SalesContent() {
                 <Box sx={{ mt: 2 }}>
                   <Typography variant="h6">Make Sale</Typography>
                   <form onSubmit={handleSubmit}>
-                    <TextField
-                      label="Name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      fullWidth
-                      required
-                      sx={{ mb: 2, borderRadius: "12px" }}
-                    />
+                    <FormControl fullWidth sx={{ mb: 2, borderRadius: "12px" }}>
+                      <InputLabel>Name</InputLabel>
+                      <Select
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        required
+                      >
+                        {inventoryData.map((item) => (
+                          <MenuItem key={item.id} value={item.name}>
+                            {item.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+
+                    <FormControl fullWidth sx={{ mb: 2, borderRadius: "12px" }}>
+                      <InputLabel>Color</InputLabel>
+                      <Select
+                        name="color"
+                        value={formData.color}
+                        onChange={handleChange}
+                        required
+                      >
+                        {[...new Set(inventoryData.map((item) => item.color))].map((color) => (
+                          <MenuItem key={color} value={color}>
+                            {color}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+
                     <FormControl fullWidth sx={{ mb: 2, borderRadius: "12px" }}>
                       <InputLabel>Model</InputLabel>
                       <Select
@@ -309,11 +354,14 @@ function SalesContent() {
                         onChange={handleChange}
                         required
                       >
-                        <MenuItem value="top">Top</MenuItem>
-                        <MenuItem value="mid">Mid</MenuItem>
-                        <MenuItem value="base">Base</MenuItem>
+                        {[...new Set(inventoryData.map((item) => item.model))].map((model) => (
+                          <MenuItem key={model} value={model}>
+                            {model}
+                          </MenuItem>
+                        ))}
                       </Select>
                     </FormControl>
+
                     <TextField
                       label="Sell Price (₹)"
                       name="sellPrice"
@@ -330,15 +378,6 @@ function SalesContent() {
                       value={formData.quantity}
                       onChange={handleChange}
                       type="number"
-                      fullWidth
-                      required
-                      sx={{ mb: 2, borderRadius: "12px" }}
-                    />
-                    <TextField
-                      label="Colour"
-                      name="color"
-                      value={formData.color}
-                      onChange={handleChange}
                       fullWidth
                       required
                       sx={{ mb: 2, borderRadius: "12px" }}
@@ -378,27 +417,6 @@ function SalesContent() {
                 <Box sx={{ mt: 2 }}>
                   <Typography variant="h6">Generate Report</Typography>
                   <form onSubmit={handleSubmit}>
-                    <TextField
-                      label="Name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      fullWidth
-                      sx={{ mb: 2, borderRadius: "12px" }}
-                    />
-                    <FormControl fullWidth sx={{ mb: 2, borderRadius: "12px" }}>
-                      <InputLabel>Model</InputLabel>
-                      <Select
-                        name="model"
-                        value={formData.model}
-                        onChange={handleChange}
-                      >
-                        <MenuItem value="top">Top</MenuItem>
-                        <MenuItem value="mid">Mid</MenuItem>
-                        <MenuItem value="base">Base</MenuItem>
-                      </Select>
-                    </FormControl>
-                    {/* Optional: Date range fields if needed */}
                     <Button
                       variant="contained"
                       color="primary"

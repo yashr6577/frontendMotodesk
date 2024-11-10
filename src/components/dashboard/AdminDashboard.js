@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Header from './Header';
 import DashboardContent from './DashboardContent';
-import SalesContent from './SalesContent';
+import AdminSalesContent from './AdminSalesContent';
 import AdminInventoryContent from '../dashboard/AdminInventoryContent copy';
 import './styles/Dashboard.css';
 
@@ -25,7 +25,7 @@ const AdminDashboard = () => {
   const renderContent = () => {
     switch (selectedMenu) {
       case 'sales':
-        return <SalesContent />;
+        return <AdminSalesContent />;
       case 'collection':
         return <AdminInventoryContent />;
       case 'dashboard':

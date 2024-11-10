@@ -110,6 +110,30 @@ function AdminInventoryContent() {
     }
   };
 
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch("https://motodesk2-o.onrender.com/price/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        const result = await response.text();
+        setResponseMessage(result);
+      } else {
+        const errorData = await response.json();
+        setResponseMessage(errorData.message || "An error occurred");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      setResponseMessage("Server Error");
+    }
+  };
+
   const handleAcceptOrder = async (orderId) => {
     try {
       const response = await fetch(`https://motodesk2-o.onrender.com/order/order/update/confirmed/${orderId}`, {
@@ -201,6 +225,23 @@ function AdminInventoryContent() {
             type="submit"
           >
             Launch
+          </Button>
+          <Button
+            variant="contained"
+            color="warning"
+            sx={{ maxWidth: "200px" }}
+            type="button"
+            onClick={handleUpdate}
+          >
+            Update
+          </Button>
+          <Button
+            variant="contained"
+            color="error"
+            sx={{ maxWidth: "200px" }}
+            type="submit"
+          >
+            Delete
           </Button>
         </Box>
         {responseMessage && (

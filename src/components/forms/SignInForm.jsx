@@ -41,14 +41,15 @@ const SignInForm = () => {
 
         const decoded = jwtDecode(token); // Decode the JWT token
         const userName = decoded.name;
+        const userlogin = decoded.username;
 
         // Check if the username is Admin@123
         if (decoded.username === "Admin@123") {
           // Navigate to admin dashboard
-          navigate("/admin", { state: { userName } });
+          navigate("/admin", { state: { userName ,userlogin} });
         } else {
           // Navigate to regular user dashboard
-          navigate("/dashboard", { state: { userName } });
+          navigate("/dashboard", { state: { userName ,userlogin} });
         }
       } else {
         const error = await response.text();
