@@ -20,11 +20,6 @@ import {
 } from "@mui/material";
 import { FaShoppingCart, FaTruckLoading } from "react-icons/fa";
 
-const inventoryData = {
-  totalAvailableCars: 120,
-  totalOrderedCars: 30,
-};
-
 function AdminInventoryContent() {
   const [activeTab, setActiveTab] = useState(0); // 0 = Order Car, 1 = Order Tracking
   const [formData, setFormData] = useState({
