@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   FaShoppingCart,
   FaUserPlus,
@@ -12,7 +12,6 @@ import {
   CardContent,
   Typography,
   Button,
-  TextField,
   Select,
   MenuItem,
   FormControl,
@@ -70,7 +69,7 @@ function AdminSalesContent({ userlogin }) {
     quantity: "",
     sellPrice: "",
   });
-  const [inventoryData, setInventoryData] = useState([]);
+  const [inventoryData] = useState([]);
   const [responseMessage, setResponseMessage] = useState("");
 
 //   useEffect(() => {
