@@ -512,7 +512,7 @@ const handleDeleteInventory = async (id) => {
             },
           }}
         >
-          <Tab icon={<FaShoppingCart />} label="Order Car" />
+          <Tab icon={<FaShoppingCart />} label="Order Cars" />
           <Tab icon={<FaTruckLoading />} label="Order Tracking" />
           <Tab icon={<FaWarehouse />} label="Inventory Items" />
           <Tab icon={<FaWarehouse />} label="Inventory Updates" />
