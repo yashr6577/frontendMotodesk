@@ -22,9 +22,8 @@ jobs:
     - name: Install dependencies
       run: npm install
 
-    # Commenting out the test step to skip it
-    # - name: Run tests
-    #   run: npm test
+    - name: Run tests
+      run: npm test
 
     - name: Build project
       run: CI=false npm run build
