@@ -516,6 +516,7 @@ const handleDeleteInventory = async (id) => {
           <Tab icon={<FaTruckLoading />} label="Order Tracking" />
           <Tab icon={<FaWarehouse />} label="Inventory Items" />
           <Tab icon={<FaWarehouse />} label="Inventory Updates" />
+          <Tab icon={<FaWarehouse />} label="extra" />
         </Tabs>
         <Box
           sx={{
