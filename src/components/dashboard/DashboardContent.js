@@ -35,7 +35,7 @@ function DashboardContent() {
   useEffect(() => {
     const fetchSalesData = async () => {
       try {
-        const response = await fetch("https://localhost:5000/sales/getSales");
+        const response = await fetch("http://localhost:5000/sales/getSales");
         const data = await response.json();
     
         const monthlyData = monthOrder.reduce(

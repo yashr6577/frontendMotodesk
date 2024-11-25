@@ -81,7 +81,7 @@ function SalesContent({ userlogin }) {
     const fetchInventoryData = async () => {
       try {
         const response = await fetch(
-          `https://localhost:5000/inventory/user/${userlogin}`
+          `http://localhost:5000/inventory/user/${userlogin}`
         );
         const data = await response.json();
         setInventoryData(data);
@@ -110,8 +110,8 @@ function SalesContent({ userlogin }) {
 
     const endpoint =
       tabValue === 0
-        ? `https://localhost:5000/sales/add/${userlogin}`
-        : `https://localhost:5000/sales/report/${userlogin}`;
+        ? `http://localhost:5000/sales/add/${userlogin}`
+        : `http://localhost:5000/sales/report/${userlogin}`;
 
     try {
       let response;

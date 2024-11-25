@@ -77,7 +77,7 @@ function AdminSalesContent({ userlogin }) {
 //     const fetchInventoryData = async () => {
 //       try {
 //         const response = await fetch(
-//           `https://localhost:5000/inventory/Admin@123`
+//           `http://localhost:5000/inventory/Admin@123`
 //         );
 //         const data = await response.json();
 //         setInventoryData(data);
@@ -100,7 +100,7 @@ function AdminSalesContent({ userlogin }) {
   const handleGenerateReport = async (e) => {
     e.preventDefault();
 
-    const endpoint = "https://localhost:5000/sales/report";
+    const endpoint = "http://localhost:5000/sales/report";
 
     try {
       const response = await fetch(

@@ -39,7 +39,7 @@ const CustomerContent = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("https://localhost:5000/customer/add", {
+      const response = await fetch("http://localhost:5000/customer/add", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...formData, rating }),
@@ -72,7 +72,7 @@ const CustomerContent = () => {
   // Fetch reviews from the backend
   const fetchReviews = async () => {
     try {
-      const response = await fetch("https://localhost:5000/customer/reviews");
+      const response = await fetch("http://localhost:5000/customer/reviews");
       if (!response.ok) {
         throw new Error("Failed to fetch reviews");
       }

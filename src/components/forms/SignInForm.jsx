@@ -69,7 +69,7 @@ const SignInForm = () => {
 
   // Ensure loginwithgoogle function works correctly
   const loginwithgoogle = React.useCallback(() => {
-    window.open("https://localhost:5000/auth/google", "_self");
+    window.open("http://localhost:5000/auth/google", "_self");
   }, []);
 
   return (
