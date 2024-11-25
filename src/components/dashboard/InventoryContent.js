@@ -44,7 +44,7 @@ function InventoryContent({ userlogin }) {
     const fetchOrders = async () => {
       try {
         const response = await fetch(
-          "https://motodesk2-o.onrender.com/order/getOrder"
+          "https://localhost:5000/order/getOrder"
         );
         const data = await response.json();
         setOrdersData(data.orders); // Set orders data
@@ -55,7 +55,7 @@ function InventoryContent({ userlogin }) {
     const fetchInventory = async () => {
       try {
         const response = await fetch(
-          `https://motodesk2-o.onrender.com/inventory/user/${userlogin}`
+          `https://localhost:5000/inventory/user/${userlogin}`
         ); // Adjust the endpoint as needed
         const data = await response.json();
         setInventoryData(data); // Set inventory data
@@ -94,7 +94,7 @@ function InventoryContent({ userlogin }) {
     e.preventDefault();
     try {
       const response = await fetch(
-        `https://motodesk2-o.onrender.com/order/addnew/${userlogin}`,
+        `https://localhost:5000/order/addnew/${userlogin}`,
         {
           method: "POST",
           headers: {
@@ -120,7 +120,7 @@ function InventoryContent({ userlogin }) {
   const handleAddInventory = async () => {
     try {
       const response = await fetch(
-        `https://motodesk2-o.onrender.com/inventory/add/${userlogin}`,
+        `https://localhost:5000/inventory/add/${userlogin}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -160,7 +160,7 @@ const handleInventoryInputChange = (e) => {
 
 const handleUpdateInventory = async (id) => {
   try {
-    const response = await fetch(`https://motodesk2-o.onrender.com/inventory/update/${id}/${userlogin}`, {
+    const response = await fetch(`https://localhost:5000/inventory/update/${id}/${userlogin}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -177,7 +177,7 @@ const handleUpdateInventory = async (id) => {
 
 const handleDeleteInventory = async (id) => {
   try {
-    const response = await fetch(`https://motodesk2-o.onrender.com/inventory/delete/${id}/${userlogin}`, {
+    const response = await fetch(`https://localhost:5000/inventory/delete/${id}/${userlogin}`, {
       method: "DELETE",
     });
     const result = await response.json();
@@ -292,6 +292,33 @@ const handleDeleteInventory = async (id) => {
                 </Typography>
               </TableCell>
               <TableCell>₹{(order.costPrice || 0) * order.quantity}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
+
+  const renderInventoryTable = () => (
+    <TableContainer component={Paper} sx={{ maxHeight: 400 }}>
+      <Table stickyHeader aria-label="inventory table">
+        <TableHead>
+          <TableRow>
+            <TableCell>Name</TableCell>
+            <TableCell>Model</TableCell>
+            <TableCell>Cost Price</TableCell>
+            <TableCell>Color</TableCell>
+            <TableCell>Quantity</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {inventoryData.map((invdata) => (
+            <TableRow key={invdata._id}>
+              <TableCell>{invdata.name}</TableCell>
+              <TableCell>{invdata.model}</TableCell>
+              <TableCell>₹{invdata.costPrice || "N/A"}</TableCell>
+              <TableCell>{invdata.color}</TableCell>
+              <TableCell>{invdata.quantity}</TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -515,8 +542,8 @@ const handleDeleteInventory = async (id) => {
           <Tab icon={<FaShoppingCart />} label="Order Cars" />
           <Tab icon={<FaTruckLoading />} label="Order Tracking" />
           <Tab icon={<FaWarehouse />} label="Inventory Items" />
+          <Tab icon={<FaWarehouse />} label="Add cars" />
           <Tab icon={<FaWarehouse />} label="Inventory Updates" />
-          <Tab icon={<FaWarehouse />} label="extra" />
         </Tabs>
         <Box
           sx={{
@@ -534,6 +561,8 @@ const handleDeleteInventory = async (id) => {
             : activeTab === 1
             ? renderOrderTrackingTable()
             : activeTab === 2
+            ? renderInventoryTable()
+            : activeTab === 3
             ? renderAddInventoryForm()
             : renderInventoryForm()}
         </Box>

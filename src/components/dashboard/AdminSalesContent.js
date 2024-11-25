@@ -77,7 +77,7 @@ function AdminSalesContent({ userlogin }) {
 //     const fetchInventoryData = async () => {
 //       try {
 //         const response = await fetch(
-//           `https://motodesk2-o.onrender.com/inventory/Admin@123`
+//           `https://localhost:5000/inventory/Admin@123`
 //         );
 //         const data = await response.json();
 //         setInventoryData(data);
@@ -100,7 +100,7 @@ function AdminSalesContent({ userlogin }) {
   const handleGenerateReport = async (e) => {
     e.preventDefault();
 
-    const endpoint = "https://motodesk2-o.onrender.com/sales/report";
+    const endpoint = "https://localhost:5000/sales/report";
 
     try {
       const response = await fetch(
@@ -254,7 +254,7 @@ function AdminSalesContent({ userlogin }) {
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    required
+                    
                   >
                     {inventoryData.map((item) => (
                       <MenuItem key={item.id} value={item.name}>
@@ -270,7 +270,7 @@ function AdminSalesContent({ userlogin }) {
                     name="color"
                     value={formData.color}
                     onChange={handleChange}
-                    required
+                    
                   >
                     {/* {[...new Set(inventoryData.map((item) => item.color))].map((color) => (
                       <MenuItem key={color} value={color}>
@@ -286,7 +286,7 @@ function AdminSalesContent({ userlogin }) {
                     name="model"
                     value={formData.model}
                     onChange={handleChange}
-                    required
+                
                   >
                     {/* {[...new Set(inventoryData.map((item) => item.model))].map((model) => (
                       <MenuItem key={model} value={model}>

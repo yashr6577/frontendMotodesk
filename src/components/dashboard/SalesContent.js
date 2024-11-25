@@ -81,7 +81,7 @@ function SalesContent({ userlogin }) {
     const fetchInventoryData = async () => {
       try {
         const response = await fetch(
-          `https://motodesk2-o.onrender.com/inventory/user/${userlogin}`
+          `https://localhost:5000/inventory/user/${userlogin}`
         );
         const data = await response.json();
         setInventoryData(data);
@@ -108,16 +108,14 @@ function SalesContent({ userlogin }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Define the endpoint based on the current tab
     const endpoint =
       tabValue === 0
-        ? `https://motodesk2-o.onrender.com/sales/add/${userlogin}` // Endpoint for making a sale
-        : "https://motodesk2-o.onrender.com/sales/report"; // Endpoint for generating a report
+        ? `https://localhost:5000/sales/add/${userlogin}`
+        : `https://localhost:5000/sales/report/${userlogin}`;
 
     try {
       let response;
       if (tabValue === 0) {
-        // Making a sale: POST request
         response = await fetch(endpoint, {
           method: "POST",
           headers: {
@@ -126,7 +124,6 @@ function SalesContent({ userlogin }) {
           body: JSON.stringify(formData),
         });
 
-        // Handling response for sale creation
         if (response.ok) {
           const result = await response.text();
           setResponseMessage(result);
@@ -135,24 +132,22 @@ function SalesContent({ userlogin }) {
           setResponseMessage(errorData.message || "An error occurred");
         }
       } else {
-        // Generating a report: GET request
         response = await fetch(
           `${endpoint}?name=${formData.name}&model=${formData.model}`,
           {
             method: "GET",
             headers: {
-              "Content-Type": "application/pdf", // Expecting a PDF response
+              "Content-Type": "application/pdf",
             },
           }
         );
 
-        // Handling response for report generation
         if (response.ok) {
           const blob = await response.blob();
           const url = window.URL.createObjectURL(blob);
           const a = document.createElement("a");
           a.href = url;
-          a.download = "sales_report.pdf"; // Default name for the downloaded PDF
+          a.download = "sales_report.pdf";
           document.body.appendChild(a);
           a.click();
           a.remove();
@@ -160,7 +155,8 @@ function SalesContent({ userlogin }) {
         } else {
           const errorData = await response.json();
           setResponseMessage(
-            errorData.message || "An error occurred while generating the report."
+            errorData.message ||
+              "An error occurred while generating the report."
           );
         }
       }
@@ -170,10 +166,29 @@ function SalesContent({ userlogin }) {
     }
   };
 
+  // Helper Functions for Dropdown Options
+  const getUniqueNames = () => {
+    const uniqueNames = [...new Set(inventoryData.map((item) => item.name))];
+    return uniqueNames;
+  };
+
+  const getModelsByName = (name) => {
+    const models = inventoryData
+      .filter((item) => item.name === name)
+      .map((item) => item.model);
+    return [...new Set(models)];
+  };
+
+  const getColorsByNameAndModel = (name, model) => {
+    const colors = inventoryData
+      .filter((item) => item.name === name && item.model === model)
+      .map((item) => item.color);
+    return [...new Set(colors)];
+  };
+
   return (
     <Box sx={{ p: 3 }}>
       <Grid container spacing={3}>
-        {/* Left Section: Sales Summary Cards */}
         <Grid item xs={12} md={8}>
           <Grid container spacing={3}>
             {salesSummaryData.map((item, index) => (
@@ -200,7 +215,6 @@ function SalesContent({ userlogin }) {
               </Grid>
             ))}
 
-            {/* Earnings Section */}
             <Grid item xs={12}>
               <Card
                 sx={{
@@ -235,7 +249,6 @@ function SalesContent({ userlogin }) {
               </Card>
             </Grid>
 
-            {/* Top Products */}
             <Grid item xs={12}>
               <Card sx={{ borderRadius: "12px" }}>
                 <CardContent>
@@ -277,7 +290,6 @@ function SalesContent({ userlogin }) {
           </Grid>
         </Grid>
 
-        {/* Right Section: Tabs for Make Sale & Generate Report */}
         <Grid item xs={12} md={4}>
           <Card sx={{ borderRadius: "12px" }}>
             <CardContent>
@@ -287,49 +299,65 @@ function SalesContent({ userlogin }) {
                 variant="fullWidth"
                 TabIndicatorProps={{ style: { backgroundColor: "#1976d2" } }}
               >
-                <Tab
-                  label="Make Sale"
-                  sx={{
-                    "&:hover": {
-                      color: "white",
-                      backgroundColor: "#1976d2",
-                      borderRadius: "12px",
-                    },
-                  }}
-                />
-                <Tab
-                  label="Generate Report"
-                  sx={{
-                    "&:hover": {
-                      color: "white",
-                      backgroundColor: "#1976d2",
-                      borderRadius: "12px",
-                    },
-                  }}
-                />
+                <Tab label="Make Sale" />
+                <Tab label="Generate Report" />
               </Tabs>
 
-              {/* Make Sale Tab */}
               {tabValue === 0 && (
                 <Box sx={{ mt: 2 }}>
                   <Typography variant="h6">Make Sale</Typography>
                   <form onSubmit={handleSubmit}>
+                    {/* Name Field */}
                     <FormControl fullWidth sx={{ mb: 2, borderRadius: "12px" }}>
                       <InputLabel>Name</InputLabel>
                       <Select
                         name="name"
                         value={formData.name}
-                        onChange={handleChange}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          setFormData((prevData) => ({
+                            ...prevData,
+                            name: value,
+                            model: "",
+                            color: "",
+                          }));
+                        }}
                         required
                       >
-                        {inventoryData.map((item) => (
-                          <MenuItem key={item.id} value={item.name}>
-                            {item.name}
+                        {getUniqueNames().map((name, index) => (
+                          <MenuItem key={index} value={name}>
+                            {name}
                           </MenuItem>
                         ))}
                       </Select>
                     </FormControl>
 
+                    {/* Model Field */}
+                    <FormControl fullWidth sx={{ mb: 2, borderRadius: "12px" }}>
+                      <InputLabel>Model</InputLabel>
+                      <Select
+                        name="model"
+                        value={formData.model}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          setFormData((prevData) => ({
+                            ...prevData,
+                            model: value,
+                            color: "",
+                          }));
+                        }}
+                        required
+                        disabled={!formData.name}
+                      >
+                        {getModelsByName(formData.name).map((model, index) => (
+                          <MenuItem key={index} value={model}>
+                            {model}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+
+                    {/* Color Field */}
                     <FormControl fullWidth sx={{ mb: 2, borderRadius: "12px" }}>
                       <InputLabel>Color</InputLabel>
                       <Select
@@ -337,31 +365,20 @@ function SalesContent({ userlogin }) {
                         value={formData.color}
                         onChange={handleChange}
                         required
+                        disabled={!formData.model}
                       >
-                        {[...new Set(inventoryData.map((item) => item.color))].map((color) => (
-                          <MenuItem key={color} value={color}>
+                        {getColorsByNameAndModel(
+                          formData.name,
+                          formData.model
+                        ).map((color, index) => (
+                          <MenuItem key={index} value={color}>
                             {color}
                           </MenuItem>
                         ))}
                       </Select>
                     </FormControl>
 
-                    <FormControl fullWidth sx={{ mb: 2, borderRadius: "12px" }}>
-                      <InputLabel>Model</InputLabel>
-                      <Select
-                        name="model"
-                        value={formData.model}
-                        onChange={handleChange}
-                        required
-                      >
-                        {[...new Set(inventoryData.map((item) => item.model))].map((model) => (
-                          <MenuItem key={model} value={model}>
-                            {model}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-
+                    {/* Sell Price */}
                     <TextField
                       label="Sell Price (₹)"
                       name="sellPrice"
@@ -372,6 +389,8 @@ function SalesContent({ userlogin }) {
                       type="number"
                       sx={{ mb: 2, borderRadius: "12px" }}
                     />
+
+                    {/* Quantity */}
                     <TextField
                       label="Quantity"
                       name="quantity"
@@ -382,69 +401,101 @@ function SalesContent({ userlogin }) {
                       required
                       sx={{ mb: 2, borderRadius: "12px" }}
                     />
+
+                    {/* Submit Button */}
                     <Button
                       variant="contained"
                       color="primary"
                       type="submit"
+                      fullWidth
                       sx={{
-                        width: "100%",
                         borderRadius: "12px",
-                        backgroundColor: "#1976d2",
-                        "&:hover": { backgroundColor: "#115293" },
+                        mt: 1,
+                        transition: "all 0.3s ease-in-out",
                       }}
                     >
-                      Make Sale
+                      Submit
                     </Button>
                   </form>
-                  {responseMessage && (
-                    <Typography
-                      variant="body1"
-                      sx={{
-                        mt: 2,
-                        color: responseMessage.startsWith("Sale successful")
-                          ? "green"
-                          : "red",
-                      }}
-                    >
-                      {responseMessage}
-                    </Typography>
-                  )}
                 </Box>
               )}
 
-              {/* Generate Report Tab */}
               {tabValue === 1 && (
                 <Box sx={{ mt: 2 }}>
-                  <Typography variant="h6">Generate Report</Typography>
+                  <Typography variant="h6">Generate Sales Report</Typography>
                   <form onSubmit={handleSubmit}>
+                    {/* Name Field */}
+                    <FormControl fullWidth sx={{ mb: 2, borderRadius: "12px" }}>
+                      <InputLabel>Name</InputLabel>
+                      <Select
+                        name="name"
+                        value={formData.name}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          setFormData((prevData) => ({
+                            ...prevData,
+                            name: value,
+                            model: "",
+                          }));
+                        }}
+                        
+                      >
+                        {getUniqueNames().map((name, index) => (
+                          <MenuItem key={index} value={name}>
+                            {name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+
+                    {/* Model Field */}
+                    <FormControl fullWidth sx={{ mb: 2, borderRadius: "12px" }}>
+                      <InputLabel>Model</InputLabel>
+                      <Select
+                        name="model"
+                        value={formData.model}
+                        onChange={handleChange}
+                        required
+                        disabled={!formData.name}
+                      >
+                        {getModelsByName(formData.name).map((model, index) => (
+                          <MenuItem key={index} value={model}>
+                            {model}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+
+                    {/* Submit Button */}
                     <Button
                       variant="contained"
                       color="primary"
                       type="submit"
+                      fullWidth
                       sx={{
-                        width: "100%",
                         borderRadius: "12px",
-                        backgroundColor: "#1976d2",
-                        "&:hover": { backgroundColor: "#115293" },
+                        mt: 1,
+                        transition: "all 0.3s ease-in-out",
                       }}
                     >
                       Generate Report
                     </Button>
                   </form>
-                  {responseMessage && (
-                    <Typography
-                      variant="body1"
-                      sx={{
-                        mt: 2,
-                        color: responseMessage.startsWith("Report generated")
-                          ? "green"
-                          : "red",
-                      }}
-                    >
-                      {responseMessage}
-                    </Typography>
-                  )}
                 </Box>
+              )}
+
+              {responseMessage && (
+                <Typography
+                  variant="body1"
+                  sx={{
+                    mt: 2,
+                    color: responseMessage.startsWith("Sale successful")||responseMessage.startsWith("Report generated successfully.")
+                      ? "green"
+                      : "red",
+                  }}
+                >
+                  {responseMessage}
+                </Typography>
               )}
             </CardContent>
           </Card>

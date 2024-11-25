@@ -27,7 +27,7 @@ const SignInForm = () => {
     setLoading(true); // Start loading animation
 
     try {
-      const response = await fetch("https://motodesk2-o.onrender.com/login", {
+      const response = await fetch("https://localhost:5000/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(credentials),
@@ -69,7 +69,7 @@ const SignInForm = () => {
 
   // Ensure loginwithgoogle function works correctly
   const loginwithgoogle = React.useCallback(() => {
-    window.open("https://motodesk2-o.onrender.com/auth/google", "_self");
+    window.open("https://localhost:5000/auth/google", "_self");
   }, []);
 
   return (

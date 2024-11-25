@@ -37,7 +37,7 @@ function AdminInventoryContent() {
     // Fetch orders from backend when component mounts
     const fetchOrders = async () => {
       try {
-        const response = await fetch("https://motodesk2-o.onrender.com/order/getOrder");
+        const response = await fetch("https://localhost:5000/order/getOrder");
         const data = await response.json();
         setOrdersData(data.orders); // Set orders data
       } catch (error) {
@@ -46,7 +46,7 @@ function AdminInventoryContent() {
     };
     const fetchInventory = async () => {
       try {
-        const response = await fetch("https://motodesk2-o.onrender.com/inventory/"); // Adjust the endpoint as needed
+        const response = await fetch("https://localhost:5000/inventory/"); // Adjust the endpoint as needed
         const data = await response.json();
         setInventoryData(data); // Set inventory data
       } catch (error) {
@@ -84,7 +84,7 @@ function AdminInventoryContent() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("https://motodesk2-o.onrender.com/price/add", {
+      const response = await fetch("https://localhost:5000/price/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -108,7 +108,7 @@ function AdminInventoryContent() {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("https://motodesk2-o.onrender.com/price/add", {
+      const response = await fetch("https://localhost:5000/price/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -131,13 +131,13 @@ function AdminInventoryContent() {
 
   const handleAcceptOrder = async (orderId) => {
     try {
-      const response = await fetch(`https://motodesk2-o.onrender.com/order/order/update/confirmed/${orderId}`, {
+      const response = await fetch(`https://localhost:5000/order/order/update/confirmed/${orderId}`, {
         method: "POST",
       });
 
       if (response.ok) {
         // Fetch updated orders after accepting
-        const updatedOrdersResponse = await fetch("https://motodesk2-o.onrender.com/order/getOrder");
+        const updatedOrdersResponse = await fetch("https://localhost:5000/order/getOrder");
         const data = await updatedOrdersResponse.json();
         setOrdersData(data.orders);
       } else {
@@ -150,13 +150,13 @@ function AdminInventoryContent() {
 
   const handleDeliverOrder = async (orderId) => {
     try {
-      const response = await fetch(`https://motodesk2-o.onrender.com/order/order/update/delivered/${orderId}`, {
+      const response = await fetch(`https://localhost:5000/order/order/update/delivered/${orderId}`, {
         method: "POST",
       });
 
       if (response.ok) {
         // Fetch updated orders after delivering
-        const updatedOrdersResponse = await fetch("https://motodesk2-o.onrender.com/order/getOrder");
+        const updatedOrdersResponse = await fetch("https://localhost:5000/order/getOrder");
         const data = await updatedOrdersResponse.json();
         setOrdersData(data.orders);
       } else {

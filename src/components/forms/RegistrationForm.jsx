@@ -28,7 +28,7 @@ const RegistrationForm = () => {
     setLoading(true); // Start loading animation
 
     try {
-      const response = await fetch('https://motodesk2-o.onrender.com/register', {
+      const response = await fetch('https://localhost:5000/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
