@@ -81,7 +81,7 @@ function SalesContent({ userlogin }) {
     const fetchInventoryData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/inventory/user/${userlogin}`
+          `https://motodesk-web.onrender.com/inventory/user/${userlogin}`
         );
         const data = await response.json();
         setInventoryData(data);
@@ -110,8 +110,8 @@ function SalesContent({ userlogin }) {
 
     const endpoint =
       tabValue === 0
-        ? `http://localhost:5000/sales/add/${userlogin}`
-        : `http://localhost:5000/sales/report/${userlogin}`;
+        ? `https://motodesk-web.onrender.com/sales/add/${userlogin}`
+        : `https://motodesk-web.onrender.com/sales/report/${userlogin}`;
 
     try {
       let response;
