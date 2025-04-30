@@ -55,7 +55,7 @@ function InventoryContent({ userlogin }) {
     const fetchInventory = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/inventory/user/${userlogin}`
+          `https://motodesk-web.onrender.com/inventory/user/${userlogin}`
         ); // Adjust the endpoint as needed
         const data = await response.json();
         setInventoryData(data); // Set inventory data
@@ -94,7 +94,7 @@ function InventoryContent({ userlogin }) {
     e.preventDefault();
     try {
       const response = await fetch(
-        `http://localhost:5000/order/addnew/${userlogin}`,
+        `https://motodesk-web.onrender.com/order/addnew/${userlogin}`,
         {
           method: "POST",
           headers: {
@@ -120,7 +120,7 @@ function InventoryContent({ userlogin }) {
   const handleAddInventory = async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/inventory/add/${userlogin}`,
+        `https://motodesk-web.onrender.com/inventory/add/${userlogin}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -160,7 +160,7 @@ const handleInventoryInputChange = (e) => {
 
 const handleUpdateInventory = async (id) => {
   try {
-    const response = await fetch(`http://localhost:5000/inventory/update/${id}/${userlogin}`, {
+    const response = await fetch(`https://motodesk-web.onrender.com/inventory/update/${id}/${userlogin}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -177,7 +177,7 @@ const handleUpdateInventory = async (id) => {
 
 const handleDeleteInventory = async (id) => {
   try {
-    const response = await fetch(`http://localhost:5000/inventory/delete/${id}/${userlogin}`, {
+    const response = await fetch(`https://motodesk-web.onrender.com/inventory/delete/${id}/${userlogin}`, {
       method: "DELETE",
     });
     const result = await response.json();
